@@ -36,7 +36,9 @@ pipe.enable_xformers_memory_efficient_attention()
 rng = torch.Generator(device)
 rng.seed()
 
-input_img = Image.open("./input.png").convert("RGB")
+input_img = Image.open("./diffusion_input.png").convert("RGB")
+input_size = 768
+input_img = input_img.resize((input_size, input_size), Image.Resampling.LANCZOS)
 
 
 
@@ -54,15 +56,7 @@ def generate_image(guidance_scale, strength, prompt, negative_prompt):
     ).images
     return images[0]
 
-
-def undominated_trials(study: PreferentialStudy) -> list[FrozenTrial]:
-    trials = study.get_trials(deepcopy=False, states=(TrialState.COMPLETE, TrialState.RUNNING))
-    preferences = study.get_preferences(deepcopy=False)
-    dominated = {t.number for (_, t) in preferences}
-    return [t for t in trials if t.number not in dominated]
-
-STORAGE_URL = "sqlite:///st-example.db"
-
+STORAGE_URL = "sqlite:///example.db"
 
 study = optuna_dashboard.preferential.create_study(
     study_name="preferential_diffusion",
