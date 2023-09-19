@@ -127,7 +127,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
 
         artifact_id = upload_artifact(trial, image_path, artifact_store)
         trial.set_user_attr("image", artifact_id)
-        print(f"Upload done. (artifact_id: {artifact_id})")
+        print(f"Upload done. (url: {get_artifact_path(trial, artifact_id)})")
 
 
 
